@@ -4,7 +4,7 @@ Personal portfolio website built with HTML, CSS &amp; JavaScript — deployed on
 
 A clean, responsive, and modern personal portfolio website built from scratch using HTML, CSS, and JavaScript. Designed to showcase my skills, projects, and professional profile as a Web Developer.
 
-🔗 Live Site: https://golladhanunjayyadav-cloud.github.io/personal-portfolio/
+🔗 Live Site: https://dhanubyte.github.io/personal-portfolio/
 
 
 📌 Sections
