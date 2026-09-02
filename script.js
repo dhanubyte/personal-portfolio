@@ -1,56 +1,69 @@
-// ========================
-// DHANU PORTFOLIO - script.js
-// ========================
-
-let current = 0;
-const total = 5;
+// ===== SLIDER LOGIC =====
 const slider = document.getElementById('slider');
-const dotsContainer = document.getElementById('dots');
+const dotsWrapper = document.getElementById('dots');
+const slides = document.querySelectorAll('.slide');
+const totalSlides = slides.length;
 
-// Create navigation dots
-for (let i = 0; i < total; i++) {
-    const dot = document.createElement('div');
-    dot.className = 'dot' + (i === 0 ? ' active' : '');
-    dot.onclick = () => goTo(i);
-    dotsContainer.appendChild(dot);
+let currentSlide = 0;
+
+// Build dot indicators dynamically based on number of slides
+function buildDots() {
+    dotsWrapper.innerHTML = '';
+    for (let i = 0; i < totalSlides; i++) {
+        const dot = document.createElement('div');
+        dot.classList.add('dot');
+        if (i === currentSlide) dot.classList.add('active');
+        dot.addEventListener('click', () => goTo(i));
+        dotsWrapper.appendChild(dot);
+    }
 }
 
-// Go to a specific slide
-function goTo(index) {
-    current = index;
-    slider.style.transform = `translateX(-${current * 100}%)`;
-    document.querySelectorAll('.dot').forEach((d, i) => {
-        d.classList.toggle('active', i === current);
+function updateDots() {
+    const dots = document.querySelectorAll('.dot');
+    dots.forEach((dot, i) => {
+        dot.classList.toggle('active', i === currentSlide);
     });
-    return false;
 }
 
-// Next slide
+function updateSlider() {
+    slider.style.transform = `translateX(-${currentSlide * (100 / totalSlides)}%)`;
+    updateDots();
+}
+
+function goTo(index) {
+    if (index < 0) index = totalSlides - 1;
+    if (index >= totalSlides) index = 0;
+    currentSlide = index;
+    updateSlider();
+}
+
 function nextSlide() {
-    goTo((current + 1) % total);
+    goTo(currentSlide + 1);
 }
 
-// Previous slide
 function prevSlide() {
-    goTo((current - 1 + total) % total);
+    goTo(currentSlide - 1);
 }
 
-// Keyboard arrow navigation
+// Keyboard navigation
 document.addEventListener('keydown', (e) => {
     if (e.key === 'ArrowRight') nextSlide();
     if (e.key === 'ArrowLeft') prevSlide();
 });
 
-// Touch / swipe support for mobile
-let startX = 0;
-
+// Basic swipe support for touch devices
+let touchStartX = 0;
 slider.addEventListener('touchstart', (e) => {
-    startX = e.touches[0].clientX;
+    touchStartX = e.changedTouches[0].screenX;
 });
-
 slider.addEventListener('touchend', (e) => {
-    const diff = startX - e.changedTouches[0].clientX;
+    const touchEndX = e.changedTouches[0].screenX;
+    const diff = touchStartX - touchEndX;
     if (Math.abs(diff) > 50) {
         diff > 0 ? nextSlide() : prevSlide();
     }
 });
+
+// Init
+buildDots();
+updateSlider();
